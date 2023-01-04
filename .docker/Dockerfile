@@ -15,7 +15,4 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable mysqli 
 # Install Composer from the official image
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-#WORKDIR /var/www/html
-#RUN  php artisan key:generate && php artisan migrate:fresh —seed
-
 EXPOSE 9000
