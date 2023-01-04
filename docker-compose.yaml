@@ -7,7 +7,7 @@ services:
      - ./.env
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
-      #MYSQL_USER: ${DB_USERNAME}
+      MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
     volumes:
@@ -17,43 +17,43 @@ services:
     build:
       context: ./.docker
       dockerfile: Dockerfile
-    ports: 
-    - 8000:9000
     restart: always
     depends_on:
     - db
     volumes:
       - ./:/var/www/html
   
-  php-service-2:
-    build:
-      context: ./.docker
-      dockerfile: Dockerfile
-    ports: 
-    - 8001:9001
-    restart: always
-    depends_on:
-    - db
-    volumes:
-      - ./:/var/www/html
+#  php-service-2:
+#    build:
+#      context: ./.docker
+#      dockerfile: Dockerfile
+#    ports: 
+#    - 8001:9001
+#    restart: always
+#    depends_on:
+#    - db
+#    volumes:
+#      - ./:/var/www/html
 
   nginx-1:
     image: nginx
     restart: always
+    ports:
+     -  "80:80"
     depends_on:
     - php-service-1
     volumes:
-      - ./:/usr/share/nginx/html
+      - ./:/var/www/html
       - ./.docker/nginx1:/etc/nginx/conf.d/
   
 
-  nginx-2:
-    image: nginx
-    restart: always
-    depends_on:
-    - php-service-2
-    volumes:
-      - ./:/usr/share/nginx/html
-      - ./.docker/nginx2:/etc/nginx/conf.d/
+# nginx-2:
+#    image: nginx
+#    restart: always
+#    depends_on:
+#    - php-service-2
+#    volumes:
+#      - ./:/usr/share/nginx/html
+#      - ./.docker/nginx2:/etc/nginx/conf.d/
 volumes:
   mysql:
