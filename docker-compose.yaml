@@ -84,6 +84,13 @@ services:
     volumes:
       - ./:/var/www/html
       - ./.docker/nginx1:/etc/nginx/conf.d/
+
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      -  "8025:8025"
+      -  "1025:1025"
   
 volumes:
   mysql:
