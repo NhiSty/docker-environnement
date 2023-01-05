@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  composer1:
+  composer:
     build:
       context: ./.docker
       dockerfile: Dockerfile
@@ -8,31 +8,15 @@ services:
     working_dir: /var/www/html
     command: sh -c "composer update && composer install && php artisan key:generate && php artisan migrate"
     volumes:
-      - ./laravel1:/var/www/html
-  composer2:
-    build:
-      context: ./.docker
-      dockerfile: Dockerfile
-    restart: on-failure
-    working_dir: /var/www/html
-    command: sh -c "composer update && composer install && php artisan key:generate && php artisan migrate"
-    volumes:
-      - ./laravel2:/var/www/html
+      - ./:/var/www/html
   
-  nodejs1:
+  nodejs:
     image: node:16
     restart: on-failure
     working_dir: /var/www/html
     command: sh -c "npm install & npm run dev"
     volumes:
-      - ./laravel1:/var/www/html
-  nodejs2:
-    image: node
-    restart: on-failure
-    working_dir: /var/www/html
-    command: sh -c "npm install & npm run dev"
-    volumes:
-      - ./laravel2:/var/www/html
+      - ./:/var/www/html
   db: 
     image: mysql:5.7
     restart: always
@@ -63,9 +47,9 @@ services:
     restart: on-failure
     depends_on:
     - db
-    - composer1
+    - composer
     volumes:
-      - ./laravel1:/var/www/html
+      - ./:/var/www/html
   
   php-service-2:
     build:
@@ -74,9 +58,9 @@ services:
     restart: on-failure
     depends_on:
     - db
-    - composer2
+    - composer
     volumes:
-      - ./laravel2:/var/www/html
+      - ./:/var/www/html
 
   nginx-1:
     image: nginx
@@ -86,7 +70,7 @@ services:
     depends_on:
     - php-service-1
     volumes:
-      - ./laravel1:/var/www/html
+      - ./:/var/www/html
       - ./.docker/nginx1:/etc/nginx/conf.d/
 
   
@@ -98,7 +82,7 @@ services:
     depends_on:
     - php-service-1
     volumes:
-      - ./laravel2:/var/www/html
+      - ./:/var/www/html
       - ./.docker/nginx1:/etc/nginx/conf.d/
 
   mailhog:
