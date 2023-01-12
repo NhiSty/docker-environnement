@@ -15,7 +15,7 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     working_dir: /var/www/html
-    command: sh -c "composer update && composer install && php artisan key:generate && php artisan migrate"
+    command: sh -c "composer update && composer install && php artisan key:generate"
     volumes:
       - ./laravel2:/var/www/html
   
@@ -23,14 +23,14 @@ services:
     image: node:16
     restart: on-failure
     working_dir: /var/www/html
-    command: sh -c "npm install & npm run dev"
+    command: sh -c "npm install && npm run dev"
     volumes:
       - ./laravel1:/var/www/html
   nodejs2:
     image: node
     restart: on-failure
     working_dir: /var/www/html
-    command: sh -c "npm install & npm run dev"
+    command: sh -c "npm install && npm run dev"
     volumes:
       - ./laravel2:/var/www/html
   db: 
@@ -96,10 +96,10 @@ services:
     ports:
       -  "81:80"
     depends_on:
-    - php-service-1
+    - php-service-2
     volumes:
       - ./laravel2:/var/www/html
-      - ./.docker/nginx1:/etc/nginx/conf.d/
+      - ./.docker/nginx2:/etc/nginx/conf.d/
 
   mailhog:
     image: mailhog/mailhog
@@ -107,6 +107,5 @@ services:
     ports:
       -  "8025:8025"
       -  "1025:1025"
-  
 volumes:
   mysql:
